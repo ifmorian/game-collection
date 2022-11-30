@@ -1,11 +1,21 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
+  width: 50%;
+  height: 100vh;
   margin: 0 auto;
-  padding: 2rem;
 
-  font-weight: normal;
+  background-color: var(--color-background);
+}
+
+.color-red {
+  color: var(--red);
+}
+.color-dark-red {
+  color: var(--dark-red);
+}
+.color-blue {
+  color: var(--blue);
 }
 
 a,
@@ -21,15 +31,11 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.divider {
+  height: 2px;
+  width: 100%;
+  align-self: center;
+  background: var(--color-border);
+  margin: 3% 0;
 }
