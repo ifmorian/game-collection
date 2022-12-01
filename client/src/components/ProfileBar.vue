@@ -22,6 +22,7 @@ export default {
       AuthenticationService.logout().then(res => {
         if (res.data) {
           store.userid.value = '';
+          this.$leaveLobby();
         }
         else {
           console.error('Couldn\'t logout. Please try again')

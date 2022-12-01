@@ -1,7 +1,10 @@
 <template>
   <div class="main">
     <div class="lobby">
-      <div class="lobby-title">{{lobbyTitle}}</div>
+      <div class="lobby-title">{{lobby.name}}</div>
+      <div class="lobby-players">
+        <div class="lobby-players-player" v-for="player in lobby.players">{{player}}<span v-if="(player === lobby.owner)" class="material-symbols-outlined owner-icon">star</span></div>
+      </div>
     </div>
     <div class="card">
       <div class="card-title">Join a Lobby</div>
@@ -58,7 +61,13 @@
 
 <script>
   import AuthenticationService from '../services/AuthenticationService';
+  import store from '../store';
   export default {
+  setup() {
+    let lobby = store.lobby;
+    let userid = store.userid;
+    return { lobby, userid };
+  },
     data() {
       return {
         lobbyTitle: 'Not connected',
@@ -67,12 +76,17 @@
         joinPassword: '',
         joinPasswordError: '',
         joinServerError: '',
-        createName: '',
+        createName: this.userid === '' ? '' : this.userid + '\'s Game',
         createNameError: '',
         createPassword: '',
         createPasswordError: '',
         createServerError: '',
       };
+    },
+    computed: {
+      playerList: () => {
+        return;
+      }
     },
     methods: {
       async join() {
@@ -112,6 +126,18 @@
             if (errorCode % 5 === 0) this.createNameError = 'Lobby already exists';
             return;
           }
+          this.$joinLobby(this.createName, this.createPassword, (errorCode) => {
+            if (errorCode === 0) {
+              this.$updateSession();
+              this.$router.push('/login?from=/lobby');
+              return;
+            }
+            if (errorCode !== 1) {
+              this.createServerError = 'Couldn\'t join lobby';
+              return;
+            }
+            store.lobby.value.name = this.createName;
+          });
         }).catch(err => {
           this.createServerError = 'Something went wrong';
           console.error(err);
@@ -143,6 +169,10 @@
     width: 100%;
   }
 
+  .card-form-group {
+    margin-bottom: 5%;
+  }
+
   .input {
     width: 70%;
   }
@@ -161,5 +191,24 @@
 
   .lobby-title {
     font-weight: bold;
+    margin-bottom: 10%;
+  }
+
+  .lobby-players {
+    font-size: 1rem;
+    /* margin-left: 1.3rem; */
+  }
+
+  .lobby-players-player {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .owner-icon {
+    font-size: 1rem;
+    margin-left: .3rem;
+    margin-top: -.15rem;
+    color: gold;
   }
 </style>

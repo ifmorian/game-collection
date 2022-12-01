@@ -85,4 +85,12 @@ export default {
   .card {
     margin-top: 8%;
   }
+
+  .card-form-error {
+    top: 89%;
+  }
+
+  .card-form-group {
+    height: 5rem
+  }
 </style>

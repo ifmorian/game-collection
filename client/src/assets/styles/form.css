@@ -23,15 +23,15 @@
 .card-form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 5%;
+  margin-bottom: 10%;
 }
 
 .card-form-error {
   position: absolute;
-  bottom: -30%;
+  top: 102%;
   color: var(--error);
-  margin-top: -.5%;
   font-size: .9rem;
+  line-height: .8rem;
 }
 
 .input {
@@ -113,5 +113,5 @@ label {
 }
 
 .redirect:active > .redirect-arrow {
-  margin-left: 70%;
+  margin-left: 50%;
 }

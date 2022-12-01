@@ -3,7 +3,7 @@ class LobbyClass {
     this.name = name;
     this.password = password;
     this.owner = userid;
-    this.users = [];
+    this.players = [];
     this.room = name + (new Date().getTime());
   }
 }
@@ -17,10 +17,10 @@ const Lobby = (data, cb) => {
     errorCode *= 5;
   }
   if (errorCode === 1) {
-    let newLobby = new LobbyClass(data.name, data.password);
+    let newLobby = new LobbyClass(data.name, data.password, data.userid);
     lobbies.push(newLobby);
   }
   cb(errorCode);
 }
 
-module.exports = Lobby;
+module.exports = {Lobby, lobbies};

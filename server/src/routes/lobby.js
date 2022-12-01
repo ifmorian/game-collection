@@ -6,7 +6,7 @@ router.post('/create', (req, res) => {
     errorCode: 2
   });
   req.body.userid = req.session.userid;
-  require('../models/Lobby')(req.body, errorCode => {
+  require('../models/Lobby').Lobby(req.body, errorCode => {
     res.send({
       errorCode: errorCode
     });

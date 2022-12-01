@@ -46,21 +46,43 @@ const io = require('socket.io')(server, {
     credentials: true
   }
 });
+const Lobby = require('./models/Lobby');
 
 io.on('connection', socket => {
   let cookie_string = socket.request.headers.cookie;
-  let session = memoryStore.sessions[cookie_string.split('connect.sid=s%3A')[1].split('.')[0]];
+  let session = cookie_string !== undefined ? memoryStore.sessions[cookie_string.split('connect.sid=s%3A')[1].split('.')[0]] : undefined;
+  if (session !== undefined) session = JSON.parse(session);
 
   function checkSession() {
-    if (session === undefined) {
-      socket.emit('no-session')
+    return session !== undefined;
+  }
+  socket.on('join-lobby', (name, password, cb) => {
+    if (!checkSession()) {
+      cb(0);
       return;
     }
-  }
-
-  console.log('Keine session');
-  socket.on('join-lobby', (name, password, cb) => {
-    
+    let lobby = Lobby.lobbies.find(l => { return l.name === name; })
+    if (lobby === undefined) {
+      cb(2);
+      return;
+    }
+    if (lobby.password === password) {
+      lobby.players.push(session.userid);
+      socket.join(lobby.room);
+      io.to(lobby.room).emit('update-lobby', lobby.name, lobby.owner, lobby.players)
+      cb(1);
+    } else {
+      cb(3);
+    }
+  })
+  socket.on('rejoin-lobby', (err) => { 
+    if (!checkSession()) {
+      err();
+      return;
+    }
+    let lobby = Lobby.lobbies.find(l => { return l.players.includes(session.userid) })
+    if (lobby === undefined) return;
+    socket.emit('update-lobby', lobby.name, lobby.owner, lobby.players)
   })
 });
 

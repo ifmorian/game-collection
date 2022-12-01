@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const db = require('../db');
+const Lobby = require('../models/Lobby');
 
 router.post('/register', (req, res) => {
   require('../models/User')(req.body, errorCode => {
@@ -36,6 +37,11 @@ router.post('/isloggedin', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
+  Lobby.lobbies.forEach(l => {
+    if (l.players.includes(req.session.userid)) {
+      l.players = l.players.filter(player => player !== req.session.userid);
+    }
+  });
   req.session.destroy(err => {
     if (err) {
       console.error(err);
