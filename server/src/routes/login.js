@@ -37,9 +37,9 @@ router.post('/isloggedin', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  Lobby.lobbies.forEach(l => {
-    if (l.players.includes(req.session.userid)) {
-      l.players = l.players.filter(player => player !== req.session.userid);
+  Lobby.getLobbies().forEach(l => {
+    if (l.players.some(player => player.userid = req.session.userid)) {
+      l.players = l.players.filter(player => player.userid !== req.session.userid);
     }
   });
   req.session.destroy(err => {

@@ -6,12 +6,19 @@ class LobbyClass {
     this.players = [];
     this.room = name + (new Date().getTime());
   }
+  delete() {
+    lobbies = lobbies.filter(l => l.name !== this.name);
+  }
 }
 
 let lobbies = [];
 
 const Lobby = (data, cb) => {
   let errorCode = 1;
+  if (lobbies.some(l => l.players.some(player => player.userid === data.userid))) {
+    cb(7);
+    return;
+  }
   if (data.name === '') errorCode *= 3;
   if (lobbies.some(l => { return l.name === data.name; })) {
     errorCode *= 5;
@@ -23,4 +30,4 @@ const Lobby = (data, cb) => {
   cb(errorCode);
 }
 
-module.exports = {Lobby, lobbies};
+module.exports = {Lobby, getLobbies: () => { return lobbies }};

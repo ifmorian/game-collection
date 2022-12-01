@@ -14,6 +14,9 @@ const socket = io('http://localhost:3000', {
 
 socket.on('connect', () => {
   console.log(`You're connected with id ${socket.id}`)
+  socket.emit('rejoin-lobby', () => {
+    console.error('Could not rejoin lobby: Session does not exist.')
+  })
 });
 
 socket.on('update-lobby', (name, owner, players) => {
@@ -26,14 +29,11 @@ const app = createApp(App)
 
 app.mixin({
   methods: {
-    $updateSession: async () => {
+    $updateSession: async function anonymous() {
       await AuthenticationService.checkLogin().then(res => {
         store.userid.value = res.data;
         if (res.data !== '') {
           socket.connect();
-          socket.emit('rejoin-lobby', () => {
-            $updateSession();
-          })
         } else {
           store.lobby.value.name = 'Not connected';
           socket.close();
@@ -52,6 +52,9 @@ app.mixin({
         owner: '',
         players: []
       }
+      socket.emit('leave-lobby', () => {
+        console.error('Could not leave lobby: Session does not exist.')
+      })
     }
   }
 })
