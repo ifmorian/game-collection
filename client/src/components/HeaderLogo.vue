@@ -13,7 +13,7 @@
     height: 100%;
 
     font-family: 'Tannenberg';
-    font-size: 4vh;
+    font-size: 2vw;
 
     cursor: pointer;
   }

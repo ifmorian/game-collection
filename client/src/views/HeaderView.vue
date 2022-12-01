@@ -13,19 +13,24 @@
 </template>
 
 <style scoped>
-  .header{
+  .header {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: start;
 
     width: 100%;
     height: 5vw;
     
-    padding: 0 1%;
+    padding: 0 2%;
 
     border-bottom: 2px solid var(--color-border);
   }
 
   .header-nav {
+    margin-left: 1em;
+  }
+
+  .header-profile {
+    margin-left: auto;
   }
 </style>

@@ -1,26 +1,21 @@
 <template>
-  <div class="nav">
-    <a href="/test">test</a>
-    <a href="/test">test</a>
-    <a href="/test">test</a>
-    <a href="/test">test</a>
-  </div>
+  <ul class="nav">
+    <li @click="this.$router.push('/lobby')">Lobby</li>
+    <li @click="this.$router.push('/games')">Games</li>
+  </ul>
 </template>
 
 <style scoped>
+  @import '../assets/styles/nav-x.css';
   .nav {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 
-    width: 20%;
+    width: 10em;
     height: 100%;
 
     font-size: 1.4em;
-  }
-
-  a {
-    margin-left: 2em;
   }
 </style>

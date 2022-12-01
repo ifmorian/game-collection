@@ -6,17 +6,24 @@ import HeaderView from './views/HeaderView.vue';
 <template>
   <HeaderView />
   <main>
-    <RouterView />
+    <RouterView class="router-view" />
   </main>
 </template>
+
+<script>
+export default {
+  mounted() {
+    this.$updateSession();
+  }
+}
+</script>
 
 <style scoped>
 main {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 4vw;
-  height: calc(100% - 9vw);
+  margin-top: 2vw;
+  margin-bottom: 3vw;
 }
 
 nav {

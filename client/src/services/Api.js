@@ -1,9 +1,9 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+
 export default () => {
   return axios.create({
-    baseURL: 'http://localhost:3000',
-    withCredentials: true,
-    timeout: 1000
+    baseURL: 'http://localhost:3000'
   });
 }

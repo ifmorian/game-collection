@@ -1,7 +1,10 @@
 <template>
   <div class="card">
-    <div class="card-title">Login</div>
-    <div class="divider"></div>
+    <div class="card-group">
+      <div class="card-title">Login</div>
+      <div class="redirect" @click="this.$router.push('/register')">Register<span class="material-symbols-outlined redirect-arrow">arrow_right</span></div>
+    </div>
+    <div class="divider title-divider"></div>
     <form action="/login/login" method="post" class="card-form">
       <div class="card-form-group">
         <label for="username">Username</label>
@@ -13,7 +16,7 @@
       </div>
       <div class="card-form-group">
         <label for="password">Password</label>
-        <input type="text" id="password" placeholder="password" class="input" v-model="password"
+        <input type="password" id="password" placeholder="password" class="input" v-model="password"
           @input="this.passwordError = ''"
           :class="{'input-error': (passwordError !== '')}"
         >
@@ -30,7 +33,6 @@
 <script>
 import AuthenticationService from '../services/AuthenticationService';
 import ValidationService from '../services/ValidationService';
-import Api from '../services/Api'
 export default {
   data() {
     return {
@@ -63,9 +65,15 @@ export default {
             }
             if (res.data.errorCode % 2 === 0) this.usernameError = 'Credentials don\'t match an account';
             return;
-          }
-          this.$router.push('/');
-          Api().post('/login/isloggedin');
+          } 
+          let queryString = new URLSearchParams(window.location.href.split('?')[1]);
+          let from = queryString.get('from');
+
+          this.$router.push((from === undefined || from === null) ? '/' : from);
+          this.$updateSession();
+        }).catch(err => {
+          this.databaseError = 'Something went wrong';
+          console.error(err);
         });
     }
   }
@@ -73,5 +81,8 @@ export default {
 </script>
 
 <style scoped>
-@import '../assets/styles/form.css';
+  @import '../assets/styles/form.css';
+  .card {
+    margin-top: 8%;
+  }
 </style>

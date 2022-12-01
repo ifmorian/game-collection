@@ -18,17 +18,12 @@
   color: var(--blue);
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+li {
+  list-style: none;
 }
 
 
@@ -38,4 +33,16 @@ a,
   align-self: center;
   background: var(--color-border);
   margin: 3% 0;
+}
+
+.title-divider {
+  margin-bottom: 6%;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }

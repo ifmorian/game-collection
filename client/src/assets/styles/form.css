@@ -1,9 +1,10 @@
 .card {
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
   width: 60%;
-  padding: 2% 3%;
-  padding-bottom: 5%;
+  padding: 3% 5%;
+  padding-bottom: 3%;
   background: var(--color-background-mute);
 }
 
@@ -22,13 +23,15 @@
 .card-form-group {
   display: flex;
   flex-direction: column;
-  height: 90px;
+  margin-bottom: 5%;
 }
 
 .card-form-error {
+  position: absolute;
+  bottom: -30%;
   color: var(--error);
   margin-top: -.5%;
-  font-size: 90%;
+  font-size: .9rem;
 }
 
 .input {
@@ -52,11 +55,11 @@
 }
 
 label {
-  font-size: 120%;
+  font-size: 1.1rem;
 }
 
 .card-form-submit {
-  font-size: 1.2em;
+  font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   margin-top: 10%;
@@ -85,4 +88,30 @@ label {
 
 .card-form-submit-success:disabled {
   color: var(--success);
-} 
+}
+
+.card-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.redirect {
+  display: flex;
+  align-items: center;
+  font-size: 120%;
+  cursor: pointer;
+}
+
+.redirect-arrow {
+  transition: margin .3s ease;
+}
+
+.redirect:hover > .redirect-arrow {
+  margin-left: 5%;
+}
+
+.redirect:active > .redirect-arrow {
+  margin-left: 70%;
+}

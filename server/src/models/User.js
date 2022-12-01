@@ -1,7 +1,7 @@
 const db = require('../db');
 
 const User = async (credentials, cb) => {
-  errorCode = 1;
+  let errorCode = 1;
   if (credentials.username === '')  errorCode *= 2;
   if (credentials.email === '')  errorCode *= 3;
   if (credentials.password === '')  errorCode *= 5;
@@ -12,7 +12,7 @@ const User = async (credentials, cb) => {
     if (exists) return cb(errorCode * 13);
     db.exists('email', credentials.email, exists => {
       if (exists) return cb(errorCode * 17);
-      db.registerUser(credentials.username, credentials.email, credentials.password);
+      if (errorCode === 1) db.registerUser(credentials.username, credentials.email, credentials.password);
       return cb(errorCode);
     }, err => {
       console.error(err);

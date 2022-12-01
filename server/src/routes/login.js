@@ -12,23 +12,16 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  console.log(req.body);
   db.loginUser(req.body.username, req.body.password, user => {
     if (user === undefined) {
       return res.send({
         errorCode: 2
       })
     }
-    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    req.session.userid = user['name'];
-    console.log(req.session)
-    req.session.save(err => {
-      if (err) return console.log(err);
-      res.send({
-        errorCode: 1
-      })
+    let session = req.session;
+    session.userid = user['name'];
+    res.send({
+      errorCode: 1
     })
   }, err => {
     console.error(err);
@@ -39,9 +32,19 @@ router.post('/login', (req, res) => {
 });
 
 router.post('/isloggedin', (req, res) => {
-  console.log(req.session);
-  res.send('test');
-})
+  res.send(req.session.userid);
+});
+
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error(err);
+      res.send(false);
+    } else {
+      res.send(true);
+    }
+  });
+});
 
 
 module.exports = router;

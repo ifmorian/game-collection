@@ -1,7 +1,10 @@
 <template>
   <div class="card">
-    <div class="card-title">Register</div>
-    <div class="divider"></div>
+    <div class="card-group">
+      <div class="card-title">Register</div>
+      <div class="redirect" @click="this.$router.push('/login')">Login<span class="material-symbols-outlined redirect-arrow">arrow_right</span></div>
+    </div>
+    <div class="divider title-divider"></div>
     <form action="/login/register" method="post" class="card-form">
       <div class="card-form-group">
         <label for="username">Username</label>
@@ -21,7 +24,7 @@
       </div>
       <div class="card-form-group">
         <label for="password">Password</label>
-        <input type="text" id="password" placeholder="password" class="input" v-model="password"
+        <input type="password" id="password" placeholder="password" class="input" v-model="password"
           @input="this.passwordError = ''"
           :class="{'input-error': (passwordError !== '')}"
         >
@@ -29,7 +32,7 @@
       </div>
       <div class="card-form-group">
         <label for="repeatpassword">Repeat Password</label>
-        <input type="text" id="repeatpassword" placeholder="repeat password" class="input" v-model="repeatPassword"
+        <input type="password" id="repeatpassword" placeholder="repeat password" class="input" v-model="repeatPassword"
           @input="this.repeatPasswordError = ''"
           :class="{'input-error': (repeatPasswordError !== '')}"
         >
@@ -62,37 +65,44 @@ export default {
   },
   methods: {
     async register() {
-      console.log(this.$username)
       this.databaseError = '';
       this.$refs.submit.disabled = true;
-      const res = await AuthenticationService.register({
+      await AuthenticationService.register({
         username: this.username,
         email: this.email,
         password: this.password,
         repeatPassword: this.repeatPassword
-      });
-      let errorCode = res.data.errorCode;
-      if (errorCode !== 1) {
-        this.$refs.submit.disabled = false;
-        if (res.data.errorCode === 0) {
-          this.databaseError = 'Something went wrong';
+      }).then(res => {
+        let errorCode = res.data.errorCode;
+        if (errorCode !== 1) {
+          this.$refs.submit.disabled = false;
+          if (res.data.errorCode === 0) {
+            this.databaseError = 'Something went wrong';
+            return;
+          }
+          if (errorCode % 2 === 0) this.usernameError = 'Can\'t be empty';
+          if (errorCode % 11 === 0) this.emailError = 'Enter a valid email';
+          if (errorCode % 3 === 0) this.emailError = 'Can\'t be empty';
+          if (errorCode % 5 === 0) this.passwordError = 'Can\'t be empty';
+          if (errorCode % 7 === 0) this.repeatPasswordError = 'Passwords don\'t match';
+          if (errorCode % 13 === 0) this.usernameError = 'Username already exists';
+          if (errorCode % 17 === 0) this.emailError = 'Email is already registered';
           return;
         }
-        if (errorCode % 2 === 0) this.usernameError = 'Can\'t be empty';
-        if (errorCode % 11 === 0) this.emailError = 'Enter a valid email';
-        if (errorCode % 3 === 0) this.emailError = 'Can\'t be empty';
-        if (errorCode % 5 === 0) this.passwordError = 'Can\'t be empty';
-        if (errorCode % 7 === 0) this.repeatPasswordError = 'Passwords don\'t match';
-        if (errorCode % 13 === 0) this.usernameError = 'Username already exists';
-        if (errorCode % 17 === 0) this.emailError = 'Email is already registered';
-        return;
-      }
-      this.success = true;
+        this.success = true;
+        this.$router.push('/login');
+      }).catch(err => {
+        this.databaseError = 'Something went wrong';
+        console.error(err);
+      });
     }
   }
 }
 </script>
 
 <style scoped>
-@import '../assets/styles/form.css';
+  @import '../assets/styles/form.css';
+  .card {
+    margin-top: 8%;
+  }
 </style>

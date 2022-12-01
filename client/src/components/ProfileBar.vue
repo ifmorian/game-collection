@@ -1,48 +1,48 @@
 <template>
   <div class="nav">
-    <a @click="this.$router.push('/login')">Login</a>
-    <a @click="logout()" v-if="loggedIn">Logout</a>
-    <a href="/profile" v-if="loggedIn">Profile</a>
+    <li @click="this.$router.push('/login')" v-show="userid === ''" style="margin-left: auto">Login</li>
+    <li @click="logout()" v-show="userid !== ''">Logout</li>
+    <li @click="this.$joinLobby()" href="/profile" v-show="userid !== ''">Profile</li>
   </div>
 </template>
 
 <script>
-import Api from '../services/Api';
+import AuthenticationService from '../services/AuthenticationService';
+import store from '../store';
 export default {
+  setup() {
+    let userid = store.userid;
+    return { userid };
+  },
   data() {
-    return {
-      loggedIn: false
-    }
+    return {}
   },
   methods: {
-    login() {
-      this.loggedIn = true;
-    },
     logout() {
-      this.loggedIn = false;
+      AuthenticationService.logout().then(res => {
+        if (res.data) {
+          store.userid.value = '';
+        }
+        else {
+          console.error('Couldn\'t logout. Please try again')
+        }
+      });
     }
-  },
-  // async created() {
-  //   await Api().post('/login/isloggedin');
-  // }
+  }
 }
 </script>
 
 <style scoped>
+  @import '../assets/styles/nav-x.css';
   .nav {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 
-    width: 20%;
+    width: 10em;
     height: 100%;
 
     font-size: 1.4em;
-  }
-
-  a {
-    margin-left: 2em;
-    cursor: pointer;
   }
 </style>
