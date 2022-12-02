@@ -49,9 +49,7 @@ const io = require('socket.io')(server, {
 const Lobby = require('./models/Lobby');
 
 io.on('connection', socket => {
-  console.log(socket.id)
   let cookie_string = socket.request.headers.cookie;
-  console.log(cookie_string)
   let session = cookie_string !== undefined ? memoryStore.sessions[cookie_string.split('connect.sid=s%3A')[1].split('.')[0]] : undefined;
   if (session !== undefined) session = JSON.parse(session);
 

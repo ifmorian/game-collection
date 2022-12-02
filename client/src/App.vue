@@ -1,12 +1,14 @@
 <script setup>
-import { RouterView } from 'vue-router';
-import HeaderView from './views/HeaderView.vue';
+  import { RouterView } from 'vue-router';
+  import HeaderView from './views/HeaderView.vue';
+  import ToolBar from './components/ToolBar.vue';
 </script>
 
 <template>
   <HeaderView />
   <main>
     <RouterView class="router-view" />
+    <ToolBar />
   </main>
 </template>
 

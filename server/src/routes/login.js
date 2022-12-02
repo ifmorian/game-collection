@@ -40,6 +40,9 @@ router.post('/logout', (req, res) => {
   Lobby.getLobbies().forEach(l => {
     if (l.players.some(player => player.userid = req.session.userid)) {
       l.players = l.players.filter(player => player.userid !== req.session.userid);
+      if (l.players.length === 0) {
+        l.delete();
+      }
     }
   });
   req.session.destroy(err => {

@@ -3,7 +3,7 @@
     <div class="lobby">
       <div class="lobby-header">
         <div class="lobby-title">{{lobby.name}}</div>
-        <span class="material-symbols-outlined leave-icon" @click="$leaveLobby()">logout</span>
+        <span v-if="lobby.name !== 'Not connected'" class="material-symbols-outlined leave-icon" @click="$leaveLobby()">logout</span>
       </div>
       <div class="lobby-players">
         <div class="lobby-players-player"
