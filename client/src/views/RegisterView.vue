@@ -93,6 +93,7 @@ export default {
         this.$router.push('/login');
       }).catch(err => {
         this.databaseError = 'Something went wrong';
+        this.$refs.submit.disabled = false;
         console.error(err);
       });
     }

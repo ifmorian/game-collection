@@ -4,26 +4,10 @@ import router from './router'
 import { RouterLink } from 'vue-router';
 import store from './store'
 import AuthenticationService from './services/AuthenticationService';
-import { io } from 'socket.io-client';
 
 import './assets/main.css'
 
-const socket = io('http://localhost:3000', {
-  withCredentials: true
-}).close();
-
-socket.on('connect', () => {
-  console.log(`You're connected with id ${socket.id}`)
-  socket.emit('rejoin-lobby', () => {
-    console.error('Could not rejoin lobby: Session does not exist.')
-  })
-});
-
-socket.on('update-lobby', (name, owner, players) => {
-  store.lobby.value.name = name;
-  store.lobby.value.owner = owner;
-  store.lobby.value.players = players;
-})
+import socket from './services/SocketHandler';
 
 const app = createApp(App)
 
@@ -50,11 +34,15 @@ app.mixin({
       store.lobby.value = {
         name: 'Not connected',
         owner: '',
-        players: []
+        players: [],
+        messages: []
       }
       socket.emit('leave-lobby', () => {
         console.error('Could not leave lobby: Session does not exist.')
       })
+    },
+    $sendMessage: (msg, err) => {
+      socket.emit('message-to-server', msg, err);
     }
   }
 })

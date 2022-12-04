@@ -4,7 +4,8 @@ const userid = ref('');
 const lobby = ref({
   name: 'Not connected',
   owner: '',
-  players: []
+  players: [],
+  messages: []
 });
 
 export default { userid, lobby };

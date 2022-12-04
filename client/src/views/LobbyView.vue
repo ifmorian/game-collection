@@ -20,7 +20,7 @@
       <form class="card-form" style="margin-bottom: 10%">
         <div class="card-form-group">
           <label for="join-name">Lobby Name</label>
-          <input type="text" id="join-name" placeholder="lobby name" class="input" v-model="joinName"
+          <input type="text" id="join-name" placeholder="lobby name" class="input" v-model="joinName" maxlength="36"
             @input="this.joinNameError = ''"
             :class="{'input-error': (joinNameError !== '')}"
           >
@@ -36,7 +36,7 @@
         </div>
         <div class="card-form-group">
           <button @click.prevent="join()" type="submit" class="card-form-submit input">join</button>
-          <div class="card-form-error">{{joinServerError}}</div>
+          <div class="card-form-error" :class="{'card-form-submit-success': (joinServerError === 'Joined lobby!')}">{{joinServerError}}</div>
         </div>
       </form>
       <div class="card-title">Create a Lobby</div>
@@ -44,7 +44,7 @@
       <form class="card-form">
         <div class="card-form-group">
           <label for="create-name">Lobby Name</label>
-          <input type="text" id="create-name" placeholder="lobby name" class="input" v-model="createName"
+          <input type="text" id="create-name" placeholder="lobby name" class="input" v-model="createName" maxlength="36"
             @input="this.createNameError = ''"
             :class="{'input-error': (createNameError !== '')}"
           >
@@ -60,7 +60,7 @@
         </div>
         <div class="card-form-group">
           <button @click.prevent="create()" type="submit" class="card-form-submit input">create</button>
-          <div class="card-form-error">{{createServerError}}</div>
+          <div class="card-form-error"  :class="{'card-form-submit-success': createServerError === 'Created lobby!'}">{{createServerError}}</div>
         </div>
       </form>
     </div>
@@ -84,15 +84,21 @@
         joinPassword: '',
         joinPasswordError: '',
         joinServerError: '',
-        createName: this.userid === '' ? '' : this.userid + '\'s Game',
+        createName: '',
         createNameError: '',
         createPassword: '',
         createPasswordError: '',
         createServerError: '',
       };
     },
+    mounted() {
+      this.createName = this.userid === '' ? '' : `${this.userid}'${['s', 'x', 'z'].includes(this.userid.charAt(this.userid.length - 1)) ? '' : 's'} Game`
+    },
     methods: {
       async join() {
+        this.joinNameError = '';
+        this.joinPasswordError = '';
+        this.joinServerError = '';
         this.createNameError = '';
         this.createPasswordError = '';
         this.createServerError = '';
@@ -106,22 +112,23 @@
           return;
         }
         this.$joinLobby(this.joinName, this.joinPassword, errorCode => {
-          if (errorCode === 0) {
-            this.$updateSession();
-            this.$router.push('/login?from=/lobby');
-            return;
-          }
-          if (errorCode === 4) {
-            this.joinServerError = 'You are already in a lobby';
-            return;
-          }
-          if (errorCode === 2) {
-            this.joinNameError = 'Lobby doesn\'t exist';
-            return;
-          }
-          if (errorCode === 3) {
-            this.joinPasswordError = 'Wrong password';
-            return;
+          switch (errorCode) {
+            case 0:
+              this.$updateSession();
+              this.$router.push('/login?from=/lobby');
+              break;
+            case 2:
+              this.joinNameError = 'Lobby doesn\'t exist';
+              break;
+            case 3:
+              this.joinPasswordError = 'Wrong password';
+              break;
+            case 4:
+              this.joinServerError = 'You are already in a lobby';
+              break;
+            default:
+              this.joinServerError = 'Joined lobby!';
+
           }
         });
       },
@@ -129,6 +136,9 @@
         this.joinNameError = '';
         this.joinPasswordError = '';
         this.joinServerError = '';
+        this.createNameError = '';
+        this.createPasswordError = '';
+        this.createServerError = '';
         await this.$updateSession();
         if (!this.$isLoggedIn()) {
           this.$router.push('/login?from=/lobby');
@@ -138,29 +148,33 @@
           name: this.createName,
           password: this.createPassword
         }).then(res => {
-          let errorCode = res.data.errorCode;
-          if (errorCode !== 1) {
-            if (errorCode % 2 === 0) {
-              this.$router.push('/login?from=/lobby');
-              return;
-            }
-            if (errorCode === 7) this.createServerError = 'You are already in a lobby'
-            if (errorCode % 3 === 0) this.createNameError = 'Can\'t be empty';
-            if (errorCode % 5 === 0) this.createNameError = 'Lobby already exists';
-            return;
+          switch (res.data.errorCode) {
+            case 2:
+              this.createServerError = 'You are already in a lobby';
+              break;
+            case 3:
+              this.createNameError = 'Can\'t be empty';
+              break;
+            case 4:
+              this.createNameError = 'Max-length: 36';
+              break;
+            case 5:
+              this.createNameError = 'Lobby already exists';
+              break;
+            case 1:
+              this.$joinLobby(this.createName, this.createPassword, (errorCode) => {
+                if (errorCode === 0) {
+                  this.$updateSession();
+                  this.$router.push('/login?from=/lobby');
+                }
+                else if (errorCode !== 1) {
+                  this.createServerError = 'Couldn\'t join lobby';
+                }
+                else
+                  this.createServerError = 'Created lobby!';
+              });
+
           }
-          this.$joinLobby(this.createName, this.createPassword, (errorCode) => {
-            if (errorCode === 0) {
-              this.$updateSession();
-              this.$router.push('/login?from=/lobby');
-              return;
-            }
-            if (errorCode !== 1) {
-              this.createServerError = 'Couldn\'t join lobby';
-              return;
-            }
-            store.lobby.value.name = this.createName;
-          });
         }).catch(err => {
           this.createServerError = 'Something went wrong';
           console.error(err);
@@ -221,7 +235,8 @@
 
   .lobby-title {
     font-weight: bold;
-    word-break: break-all;
+    overflow-wrap: anywhere;
+    margin-right: 1%;
   }
 
   .leave-icon {
@@ -242,7 +257,7 @@
   .lobby-players-player {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    word-break: break-all;
   }
 
   .owner-icon {
@@ -250,6 +265,7 @@
     margin-left: .3rem;
     margin-top: -.15rem;
     color: gold;
+    align-self: center;
   }
 
   .connected-icon {

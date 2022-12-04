@@ -57,7 +57,7 @@ export default {
       AuthenticationService.login({
           username: this.username,
           password: this.password
-        }).then(res => {
+        }).then(async res => {
           if (res.data.errorCode !== 1) {
             if (res.data.errorCode === 0) {
               this.databaseError = 'Something went wrong';
@@ -68,9 +68,8 @@ export default {
           } 
           let queryString = new URLSearchParams(window.location.href.split('?')[1]);
           let from = queryString.get('from');
-
+          await this.$updateSession();
           this.$router.push((from === undefined || from === null) ? '/' : from);
-          this.$updateSession();
         }).catch(err => {
           this.databaseError = 'Something went wrong';
           console.error(err);
