@@ -6,6 +6,9 @@ class LobbyClass {
     this.players = [];
     this.room = name + (new Date().getTime());
     this.messages = [];
+    setTimeout(() => {
+      if (this.players.length === 0) this.delete();
+    }, 60000);
   }
   delete() {
     lobbies = lobbies.filter(l => l.name !== this.name);

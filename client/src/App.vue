@@ -24,6 +24,7 @@ export default {
 main {
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-top: 2vw;
   margin-bottom: 3vw;
 }

@@ -2,7 +2,7 @@
   <div class="nav">
     <li @click="this.$router.push('/login')" v-show="userid === ''" style="margin-left: auto">Login</li>
     <li @click="logout()" v-show="userid !== ''">Logout</li>
-    <li @click="this.$joinLobby()" href="/profile" v-show="userid !== ''">Profile</li>
+    <li @click="" href="/profile" v-show="userid !== ''">Profile</li>
   </div>
 </template>
 

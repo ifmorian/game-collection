@@ -11,7 +11,7 @@
   <div class="box" :class="{'box-show': showChat}">
     <div class="box-main" :class="{'hide' : !showChat}">
       <div class="box-header">
-        <div class="box-title">{{lobby.name}} (Chat)</div>
+        <div class="box-title">{{lobby.name}}</div>
         <span class="material-symbols-outlined exit-icon" @click="showChat = false">transit_enterexit</span>
       </div>
       <div class="divider title-divider"></div>

@@ -35,6 +35,14 @@ li {
   margin: 3% 0;
 }
 
+.divider-horizontal {
+  height: 100%;
+  width: 2px;
+  align-self: center;
+  background: var(--color-border);
+  margin: 0 3%;
+}
+
 .title-divider {
   margin-bottom: 6%;
 }
