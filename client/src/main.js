@@ -43,6 +43,10 @@ app.mixin({
     },
     $sendMessage: (msg, err) => {
       socket.emit('message-to-server', msg, err);
+    },
+    $joinGame: (id, err) => {
+      if (store.userid.value === '') return err(1);
+      socket.emit('create-game', id, err);
     }
   }
 })

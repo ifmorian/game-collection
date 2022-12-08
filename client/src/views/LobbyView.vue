@@ -71,11 +71,11 @@
   import AuthenticationService from '../services/AuthenticationService';
   import store from '../store';
   export default {
-  setup() {
-    let lobby = store.lobby;
-    let userid = store.userid;
-    return { lobby, userid };
-  },
+    setup() {
+      let lobby = store.lobby;
+      let userid = store.userid;
+      return { lobby, userid };
+    },
     data() {
       return {
         lobbyTitle: 'Not connected',

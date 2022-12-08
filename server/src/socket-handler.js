@@ -84,4 +84,10 @@ module.exports = function(socket, io, session) {
     lobby.newMessage(message);
     socket.to(lobby.room).emit('message-to-client', message);
   });
+
+  socket.on('create-game', (id, err) => {
+    if (!checkSession()) return err(0);
+    let lobby = getLobby();
+    if (lobby === undefined) return err(1);
+  })
 }
